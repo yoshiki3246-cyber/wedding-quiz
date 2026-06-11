@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Quiz — Yoshiki & Mizuki</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Sans+JP:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0f1422;--navy2:#1a2035;--navy3:#242c42;
+  --gold:#c9a96e;--gold2:#e8c98a;--gold3:rgba(201,169,110,0.15);
+  --white:#f8f5f0;--text:rgba(240,236,229,0.9);--text2:rgba(240,236,229,0.55);--text3:rgba(240,236,229,0.3);
+  --r:8px;--rl:12px;
+}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--navy);color:var(--text);min-height:100vh;}
+
+/* NAV */
+.nav{display:flex;align-items:center;gap:6px;padding:10px 16px;background:var(--navy2);border-bottom:1px solid rgba(201,169,110,0.2);flex-wrap:wrap;}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold);margin-right:10px;letter-spacing:2px;}
+.nt{padding:6px 13px;border-radius:var(--r);border:0.5px solid transparent;font-size:12px;cursor:pointer;color:var(--text2);background:transparent;font-family:'Noto Sans JP',sans-serif;transition:all .2s;}
+.nt:hover{color:var(--text);border-color:rgba(201,169,110,0.3);}
+.nt.on{background:var(--gold3);color:var(--gold);border-color:rgba(201,169,110,0.4);}
+
+/* SCREENS */
+.screen{display:none;padding:20px 16px;max-width:900px;margin:0 auto;}
+.screen.on{display:block;}
+
+/* CARD */
+.card{background:var(--navy2);border:0.5px solid rgba(201,169,110,0.18);border-radius:var(--rl);padding:18px;margin-bottom:12px;}
+.ctitle{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold);margin-bottom:12px;font-weight:300;letter-spacing:1px;}
+
+/* INPUTS */
+.inp{width:100%;padding:9px 12px;border:0.5px solid rgba(201,169,110,0.25);border-radius:var(--r);font-size:13px;background:var(--navy3);color:var(--text);font-family:'Noto Sans JP',sans-serif;}
+.inp:focus{outline:none;border-color:var(--gold);}
+textarea.inp{height:80px;resize:none;font-size:12px;}
+
+/* BUTTONS */
+.btn{padding:8px 18px;border-radius:var(--r);font-size:13px;cursor:pointer;border:0.5px solid rgba(201,169,110,0.35);background:transparent;color:var(--gold);font-family:'Noto Sans JP',sans-serif;transition:all .2s;}
+.btn:hover{background:var(--gold3);}
+.btn:active{transform:scale(.97);}
+.btn-s{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+.btn-s:hover{background:var(--gold2);color:var(--navy);}
+.btn-sm{padding:5px 11px;font-size:12px;}
+.btn-d{border-color:rgba(163,45,45,0.4);color:#e07070;}
+.btn-d:hover{background:rgba(163,45,45,0.12);}
+
+/* STATS */
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.sv{background:var(--navy3);border-radius:var(--r);padding:12px;text-align:center;border:0.5px solid rgba(201,169,110,0.08);}
+.sl{font-size:11px;color:var(--text2);margin-bottom:3px;letter-spacing:.5px;}
+.sn{font-size:20px;font-weight:300;color:var(--gold);font-family:'Cormorant Garamond',serif;}
+
+/* MEMBER */
+.mr{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid rgba(255,255,255,0.05);font-size:13px;}
+.pill{display:inline-block;padding:2px 7px;border-radius:99px;font-size:10px;}
+.pm{background:rgba(55,138,221,0.12);color:#7bbef5;}
+.pf{background:rgba(212,83,126,0.12);color:#e891b3;}
+.pok{background:rgba(59,109,17,0.18);color:#8cc851;}
+.pw{background:rgba(255,255,255,0.06);color:var(--text2);}
+
+/* QR PRINT */
+.qr-print-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:10px;}
+.qr-card{background:var(--white);border-radius:var(--r);padding:14px 10px;text-align:center;border:1px solid #e0d8cc;}
+.qr-card-inner{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.qr-card-title{font-family:'Cormorant Garamond',serif;font-size:11px;color:#888;letter-spacing:2px;}
+.qr-card-name{font-family:'Noto Sans JP',sans-serif;font-size:13px;font-weight:500;color:#1a1a2e;margin-top:2px;}
+.qr-card-group{font-size:10px;color:#aaa;font-family:'Noto Sans JP',sans-serif;}
+.qr-card-deco{width:100%;height:1px;background:linear-gradient(90deg,transparent,#c9a96e,transparent);margin:4px 0;}
+
+/* SHUFFLE */
+.ta{background:var(--navy3);border-radius:var(--r);padding:11px;margin-bottom:7px;border:0.5px solid rgba(201,169,110,0.08);}
+.tan{font-size:13px;font-weight:500;color:var(--gold);margin-bottom:6px;letter-spacing:.5px;}
+.chips{display:flex;flex-wrap:wrap;gap:4px;}
+.chip{font-size:11px;padding:2px 9px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.08);border-radius:99px;color:var(--text2);}
+.chip.m{border-color:rgba(55,138,221,0.25);}
+.chip.f{border-color:rgba(212,83,126,0.25);}
+.chip.host{border-color:rgba(201,169,110,0.5);color:var(--gold);}
+
+/* GROUP */
+.gg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+.tc{background:var(--navy3);border:0.5px solid rgba(201,169,110,0.12);border-radius:var(--r);padding:10px;text-align:center;}
+.tn{font-size:11px;color:var(--text2);margin-bottom:3px;letter-spacing:1px;}
+.tp{font-size:18px;font-family:'Cormorant Garamond',serif;color:var(--gold);}
+.tm{font-size:10px;color:var(--text3);margin:2px 0;}
+.wb{width:100%;margin-top:6px;padding:5px;font-size:11px;border-radius:6px;border:0.5px solid rgba(201,169,110,0.3);background:transparent;color:var(--gold);cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.wb:hover{background:var(--gold3);}
+
+/* RANKING */
+.ri{display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:var(--r);margin-bottom:7px;border:0.5px solid rgba(255,255,255,0.05);background:var(--navy3);transition:all .3s;}
+.ri.r1{border-color:rgba(201,169,110,0.4);background:rgba(201,169,110,0.07);}
+.ri.r2{border-color:rgba(186,117,23,0.3);background:rgba(186,117,23,0.05);}
+.ri.r3{border-color:rgba(136,135,128,0.3);background:rgba(136,135,128,0.05);}
+.pb{flex:none;width:70px;height:4px;background:rgba(255,255,255,0.07);border-radius:2px;overflow:hidden;}
+.pf{height:100%;background:var(--gold);border-radius:2px;transition:width .5s;}
+
+/* QUIZ participant */
+.qwrap{max-width:460px;margin:0 auto;}
+.qchoice{padding:11px 14px;border:0.5px solid rgba(201,169,110,0.18);border-radius:var(--r);cursor:pointer;font-size:14px;color:var(--text2);width:100%;margin-bottom:8px;text-align:left;background:transparent;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:10px;transition:all .2s;}
+.qchoice:hover{border-color:var(--gold);color:var(--text);background:var(--gold3);}
+.qchoice.cor{border-color:#8cc851;color:#8cc851;background:rgba(59,109,17,0.08);}
+.qchoice.wrg{border-color:#e07070;color:#e07070;background:rgba(163,45,45,0.08);}
+.qa{width:22px;height:22px;border-radius:50%;border:0.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+.pgbar{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;margin:6px 0 18px;}
+.pgfil{height:100%;background:var(--gold);border-radius:2px;transition:width .4s;}
+
+/* SLIDES */
+.sw{width:100%;aspect-ratio:16/9;border-radius:var(--rl);overflow:hidden;position:relative;border:0.5px solid rgba(201,169,110,0.18);}
+.sld{width:100%;height:100%;position:absolute;top:0;left:0;display:none;font-family:'Cormorant Garamond',serif;}
+.sld.on{display:flex;}
+.spills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.spill{padding:4px 11px;border-radius:var(--r);border:0.5px solid rgba(201,169,110,0.18);background:transparent;font-size:11px;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.spill.on{background:var(--gold3);color:var(--gold);border-color:rgba(201,169,110,0.4);}
+.snav{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
+
+/* slide base */
+.sbg{background:var(--navy);}
+.corner{position:absolute;width:44px;height:44px;opacity:.18;}
+.corner.tl{top:14px;left:14px;border-top:1px solid var(--gold);border-left:1px solid var(--gold);}
+.corner.tr{top:14px;right:14px;border-top:1px solid var(--gold);border-right:1px solid var(--gold);}
+.corner.bl{bottom:14px;left:14px;border-bottom:1px solid var(--gold);border-left:1px solid var(--gold);}
+.corner.br{bottom:14px;right:14px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold);}
+.sey{font-size:10px;letter-spacing:4px;color:var(--gold);font-family:'Noto Sans JP',sans-serif;font-weight:300;}
+.sline{width:36px;height:1px;background:var(--gold);margin:12px auto;opacity:.55;}
+.ssub{font-size:clamp(9px,1.1vw,11px);color:var(--text2);font-family:'Noto Sans JP',sans-serif;font-weight:300;letter-spacing:2px;margin-top:14px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#2d2060;color:#c8c0ff;padding:9px 20px;border-radius:var(--r);font-size:12px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;font-family:'Noto Sans JP',sans-serif;border:0.5px solid rgba(200,192,255,0.25);}
+.toast.show{opacity:1;}
+
+.rowgap{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;}
+.steplbl{font-size:11px;color:var(--text3);letter-spacing:.5px;margin-bottom:8px;}
+.sclist{max-height:280px;overflow-y:auto;}
+.badge{font-size:10px;padding:2px 7px;border-radius:99px;background:var(--gold3);color:var(--gold);border:0.5px solid rgba(201,169,110,0.3);}
+
+/* QRアクセス時：クイズ以外を隠す */
+body.qr-mode .nav { display: none !important; }
+body.qr-mode .screen { display: none !important; }
+body.qr-mode #sc-quiz { display: block !important; padding: 16px; }
+/* スマホ対応 */
+@media (max-width: 600px) {
+  .nav { gap:3px; padding:8px 8px; flex-wrap:wrap; }
+  .nt { font-size:10px; padding:5px 7px; }
+  .screen { padding:12px 10px; }
+  .card { padding:12px 12px; }
+  .qchoice { font-size:13px; padding:10px 12px; }
+  #qz-res { font-size:13px; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPA_URL='https://uyvcmcimdmrtvqagqgac.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5dmNtY2ltZG1ydHZxYWdxZ2FjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MDM2MjksImV4cCI6MjA5NTk3OTYyOX0.rTA67oiXVTapsIIgs7cZ6nyQErOlIg5jfhZAEmeqYvM';
+const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
+
+// Supabase経由でsave/load
+async function save(){
+  try{
+    const data={
+      players:S.players,
+      tableBonus:S.tableBonus,
+      tableMembers:S.tableMembers,
+      groupRound:S.groupRound,
+      groupCorrect:S.groupCorrect,
+      shuffled:S.shuffled,
+      tableAssign:S.tableAssign,
+    };
+    await supa.from('quiz_state').upsert({id:'main',data,updated_at:new Date().toISOString()});
+  }catch(e){console.error('save error',e);}
+}
+
+async function load(){
+  try{
+    const {data,error}=await supa.from('quiz_state').select('data').eq('id','main').single();
+    if(data&&data.data&&Object.keys(data.data).length>0){
+      const d=data.data;
+      // players・tableBonus・groupCorrect・shuffledのみ復元（prizeNames・questionsはHTMLのまま）
+      if(d.players)S.players=d.players;
+      if(d.tableBonus)S.tableBonus=d.tableBonus;
+      if(d.tableMembers)S.tableMembers=d.tableMembers;
+      if(d.groupRound)S.groupRound=d.groupRound;
+      if(d.groupCorrect)S.groupCorrect=d.groupCorrect;
+      if(d.shuffled!==undefined)S.shuffled=d.shuffled;
+      if(d.tableAssign)S.tableAssign=d.tableAssign;
+    }
+  }catch(e){console.error('load error',e);}
+  if(!S.players.length)initPlayers();
+  TABLES.forEach(t=>{if(!(t in S.tableBonus))S.tableBonus[t]=0;if(!(t in S.tableMembers))S.tableMembers[t]=[];});
+}
+
+// リアルタイム購読（携帯→PC即反映）
+function startRealtimeSync(){
+  supa.channel('quiz_state_changes')
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'quiz_state'},payload=>{
+      const nd=payload.new.data;
+      if(!nd)return;
+      // 参加者のsoloスコアだけ更新（管理側の操作は上書きしない）
+      if(nd.players){
+        nd.players.forEach(np=>{
+          const p=S.players.find(x=>x.id===np.id);
+          if(p&&np.solo!==null)p.solo=np.solo;
+        });
+      }
+      renderRanking();
+      renderAdmin();
+    })
+    .subscribe();
+}
+</script>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-logo">Y & M</div>
+  <button class="nt on" onclick="go('admin')">管理</button>
+  <button class="nt" onclick="go('quiz')">個人クイズ</button>
+  <button class="nt" onclick="go('group')">グループ戦</button>
+  <button class="nt" onclick="go('ranking')">ランキング</button>
+  <button class="nt" onclick="go('slides')">スライド</button>
+  <button class="nt" onclick="go('print')">QR印刷</button>
+</div>
+
+<!-- ADMIN -->
+<div class="screen on" id="sc-admin">
+  <div class="card">
+    <div class="ctitle">① 参加者（47名・司会2名除く45名が席替え対象）</div>
+    <div class="sg">
+      <div class="sv"><div class="sl">登録</div><div class="sn" id="a-tot">0</div></div>
+      <div class="sv"><div class="sl">クイズ完了</div><div class="sn" id="a-dn">0</div></div>
+      <div class="sv"><div class="sl">未回答</div><div class="sn" id="a-pd">0</div></div>
+    </div>
+    <div class="sclist" id="admin-list"></div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-sm btn-d" onclick="resetScores()">🔄 回答リセット</button>
+      <button class="btn btn-sm btn-d" onclick="resetPoints()">🔄 ポイントリセット</button>
+      <button class="btn btn-sm btn-d" onclick="resetAll()">⚠️ 全リセット</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">② 進行コントロール（クイズ解放）</div>
+    <div class="steplbl">参加者の携帯に表示する設問を管理します。「解放」した問題だけ回答できます。</div>
+    <div id="q-ctrl-panel" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+      <button class="btn btn-sm" onclick="openAnswer()">✅ 正解を表示（参加者画面）</button>
+      <button class="btn btn-sm btn-d" onclick="lockAll()">🔒 全問ロック</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">③ クイズ問題（個人：8問）</div>
+    <div class="steplbl">問題・選択肢・正解・解説を入力してください</div>
+    <div id="q-ed"></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">④ 席替え（7卓・特殊ルール適用）</div>
+    <div class="steplbl">固定ペア・分離・司会除外・女性グループ内2名以上を自動適用します</div>
+    <div style="background:var(--navy3);border-radius:var(--r);padding:12px;margin-bottom:14px;font-size:12px;color:var(--text2);line-height:2;">
+      <div>🔗 同卓固定：秋山＋勝井 / 武井＋辻 / 杉山＋宮下 / 藤堂＋樋元 / 三田＋久保</div>
+      <div>⭐ 5人固定卓：轟＋濵口＋谷＋西谷＋針田</div>
+      <div>↔️ 分離：佐藤 ≠ 櫻井</div>
+      <div>🎤 司会（席替え除外）：西原・吉識</div>
+      <div>👥 女性陣：同グループ内で最低2人同卓</div>
+    </div>
+    <div class="rowgap" style="margin-bottom:14px;">
+      <button class="btn btn-s" onclick="doShuffle()">🎲 席替えを実行</button>
+      <button class="btn btn-sm" onclick="doShuffle()">再シャッフル</button>
+    </div>
+    <div id="shuf-res"></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">⑤ 景品設定</div>
+    <div id="prize-ed"></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">⑥ イラスト画像アップロード</div>
+    <div class="steplbl">各問のイラストをここからアップロードできます。ページを開いている間だけ保持されます。</div>
+    <div id="img-upload-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;"></div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="screen" id="sc-quiz">
+  <div class="qwrap">
+    <div id="qz-sel">
+      <div style="text-align:center;padding:2.5rem 0;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:30px;color:var(--gold);margin-bottom:8px;">💍</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--white);margin-bottom:6px;">Quiz Competition</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:22px;">席札のQRコードから開くか、お名前を選んでください</div>
+        <select class="inp" id="qz-pick" style="margin-bottom:10px;"><option value="">— お名前を選択 —</option></select>
+        <button class="btn btn-s" style="width:100%;" onclick="startQuiz()">クイズをはじめる</button>
+      </div>
+    </div>
+    <div id="qz-main" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <span style="font-size:12px;color:var(--text2);" id="qz-ctr">問題 1 / 8</span>
+        <span class="badge" id="qz-nm"></span>
+      </div>
+      <div class="pgbar"><div class="pgfil" id="qz-pg" style="width:12.5%"></div></div>
+      <div style="font-size:11px;color:var(--gold);letter-spacing:3px;margin-bottom:10px;font-family:'Cormorant Garamond',serif;" id="qz-ql">Question 01</div>
+      <div style="font-size:16px;line-height:1.6;color:var(--text);margin-bottom:18px;font-weight:300;" id="qz-q"></div>
+      <div id="qz-ch"></div>
+      <div id="qz-res" style="display:none;padding:9px 13px;border-radius:var(--r);font-size:13px;font-weight:500;margin-top:8px;"></div>
+      <button class="btn btn-s" id="qz-nx" style="width:100%;display:none;margin-top:10px;" onclick="qzNext()">次の問題へ</button>
+    </div>
+    <div id="qz-done" style="display:none;text-align:center;padding:2.5rem 0;">
+      <div style="font-size:36px;margin-bottom:14px;">🎉</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--white);margin-bottom:6px;">回答完了！</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:18px;" id="qz-dn-nm"></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:44px;color:var(--gold);" id="qz-dn-sc"></div>
+      <div style="font-size:12px;color:var(--text2);margin-top:4px;" id="qz-dn-of"></div>
+      <div style="margin-top:18px;padding:12px;background:var(--navy3);border-radius:var(--r);font-size:13px;color:var(--text2);border:0.5px solid rgba(201,169,110,0.1);">
+        席替えの卓発表をお待ちください 🎊
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GROUP -->
+<div class="screen" id="sc-group">
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px;">
+      <div class="ctitle" style="margin:0;">グループ戦 — 第 <span id="grp-rnd">1</span> 問</div>
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-sm btn-d" onclick="backRound()">← 前の問題へ</button>
+        <button class="btn btn-sm" onclick="advRound()">次の問題へ →</button>
+      </div>
+    </div>
+    <div id="grp-warn" style="display:none;text-align:center;padding:1.5rem;font-size:13px;color:var(--text2);">席替えを先に実行してください</div>
+    <div class="gg" id="grp-grid"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;flex-wrap:wrap;gap:6px;">
+      <div style="font-size:11px;color:var(--text3);">正解した卓のボタンを押すと卓全員に +3pt</div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <select class="inp" id="cancel-tbl" style="width:100px;margin:0;font-size:12px;"></select>
+        <button class="btn btn-sm btn-d" onclick="cancelWin()">↩ 取り消し</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">代表者バトル（フラフープ・一気飲みなど）</div>
+    <div class="gg" id="btl-grid"></div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap;">
+      <select class="inp" id="btl-tbl" style="flex:1;max-width:130px;margin:0;"></select>
+      <input class="inp" id="btl-pt" type="number" value="3" min="1" max="10" style="width:60px;margin:0;" />
+      <span style="font-size:13px;color:var(--text2);">pt</span>
+      <button class="btn btn-s btn-sm" onclick="giveBattle()">付与</button>
+      <button class="btn btn-sm btn-d" onclick="cancelBattle()">↩ 取り消し</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">グループ戦リセット</div>
+    <div class="steplbl">グループ戦のポイント・正解数・問題数をリセットします（個人回答はそのまま）</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+      <button class="btn btn-sm btn-d" onclick="resetGroupOnly()">🔄 グループ戦リセット</button>
+    </div>
+  </div>
+</div>
+
+<!-- RANKING -->
+<div class="screen" id="sc-ranking">
+  <div class="sg">
+    <div class="sv"><div class="sl">参加者</div><div class="sn" id="r-tot">0</div></div>
+    <div class="sv"><div class="sl">完了</div><div class="sn" id="r-dn">0</div></div>
+    <div class="sv"><div class="sl">G問数</div><div class="sn" id="r-grp">0</div></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--gold);">総合ランキング</div>
+    <button class="btn btn-sm" onclick="refreshRanking()">更新</button>
+  </div>
+  <div id="rank-list"></div>
+</div>
+
+<!-- SLIDES -->
+<div class="screen" id="sc-slides">
+  <div class="spills" id="spills"></div>
+  <div class="sw" id="slide-wrap">
+
+    <!-- 0: 表紙 -->
+    <div class="sld sbg on" id="sl-0" style="flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;">
+      <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+      <div class="sey">Wedding After Party</div>
+      <div class="sline"></div>
+      <div style="font-size:clamp(18px,3.5vw,38px);color:var(--white);font-weight:300;line-height:1.2;">Yoshiki <span style="color:var(--gold);">&</span> Mizuki</div>
+      <div class="sline"></div>
+      <div style="font-size:clamp(12px,1.8vw,18px);color:var(--gold);letter-spacing:3px;margin-bottom:6px;">Quiz Competition</div>
+      <div class="ssub">2026.06.26</div>
+    </div>
+
+    <!-- 1: ルール -->
+    <div class="sld sbg" id="sl-1" style="flex-direction:row;">
+      <div style="width:32%;background:rgba(201,169,110,0.07);border-right:1px solid rgba(201,169,110,0.12);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;text-align:center;">
+        <div style="font-size:clamp(30px,5vw,56px);color:var(--gold);opacity:.12;line-height:1;margin-bottom:8px;font-family:'Cormorant Garamond',serif;">Rule</div>
+        <div style="font-size:clamp(16px,2.8vw,28px);color:var(--white);font-weight:300;">クイズの<br>ルール</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:20px 28px;gap:13px;">
+        <div style="display:flex;align-items:flex-start;gap:11px;">
+          <div style="width:24px;height:24px;border-radius:50%;border:0.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold);flex-shrink:0;margin-top:2px;font-family:'Noto Sans JP',sans-serif;">1</div>
+          <div style="font-size:clamp(10px,1.5vw,15px);font-family:'Noto Sans JP',sans-serif;color:var(--text2);line-height:1.6;"><span style="color:var(--text);font-weight:500;display:block;font-size:clamp(11px,1.6vw,16px);margin-bottom:2px;">個人クイズ（8問）</span>司会の合図で1問ずつ回答。1問正解 = 1pt！</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:11px;">
+          <div style="width:24px;height:24px;border-radius:50%;border:0.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold);flex-shrink:0;margin-top:2px;font-family:'Noto Sans JP',sans-serif;">2</div>
+          <div style="font-size:clamp(10px,1.5vw,15px);font-family:'Noto Sans JP',sans-serif;color:var(--text2);line-height:1.6;"><span style="color:var(--text);font-weight:500;display:block;font-size:clamp(11px,1.6vw,16px);margin-bottom:2px;">席替え</span>ランダムで7卓に再編成！新しい仲間と戦おう。</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:11px;">
+          <div style="width:24px;height:24px;border-radius:50%;border:0.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold);flex-shrink:0;margin-top:2px;font-family:'Noto Sans JP',sans-serif;">3</div>
+          <div style="font-size:clamp(10px,1.5vw,15px);font-family:'Noto Sans JP',sans-serif;color:var(--text2);line-height:1.6;"><span style="color:var(--text);font-weight:500;display:block;font-size:clamp(11px,1.6vw,16px);margin-bottom:2px;">グループ対抗クイズ</span>卓で相談して正解すると全員にポイント！</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:11px;">
+          <div style="width:24px;height:24px;border-radius:50%;border:0.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold);flex-shrink:0;margin-top:2px;font-family:'Noto Sans JP',sans-serif;">4</div>
+          <div style="font-size:clamp(10px,1.5vw,15px);font-family:'Noto Sans JP',sans-serif;color:var(--text2);line-height:1.6;"><span style="color:var(--text);font-weight:500;display:block;font-size:clamp(11px,1.6vw,16px);margin-bottom:2px;">代表者バトル</span>フラフープ・プロポーズ一言選手権！勝利卓にボーナスpt！</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:11px;">
+          <div style="width:24px;height:24px;border-radius:50%;border:0.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold);flex-shrink:0;margin-top:2px;font-family:'Noto Sans JP',sans-serif;">5</div>
+          <div style="font-size:clamp(10px,1.5vw,15px);font-family:'Noto Sans JP',sans-serif;color:var(--text2);line-height:1.6;"><span style="color:var(--text);font-weight:500;display:block;font-size:clamp(11px,1.6vw,16px);margin-bottom:2px;">合計ポイントで優勝者決定！</span>上位入賞者に豪華景品プレゼント 🎁</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2: 景品 -->
+    <div class="sld sbg" id="sl-2" style="flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;padding:8px 20px;">
+      <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+      <div class="sey">Prizes</div>
+      <div class="sline"></div>
+      <div style="font-size:clamp(16px,2.8vw,30px);color:var(--white);font-weight:300;margin-bottom:18px;">景品紹介</div>
+      <div id="sl-prizes"></div>
+    </div>
+
+    <!-- 3: 個人クイズ案内 -->
+    <div class="sld sbg" id="sl-3" style="flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;">
+      <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+      <div class="sey">Individual Quiz</div>
+      <div class="sline"></div>
+      <div style="font-size:clamp(14px,2.5vw,26px);color:var(--white);font-weight:300;margin-bottom:10px;">席札のQRコードをスキャン！</div>
+      <div style="font-size:clamp(10px,1.3vw,13px);color:var(--text2);font-family:'Noto Sans JP',sans-serif;line-height:2;">全8問 · 司会の合図で1問ずつ回答<br>解答画面は開いたままにしてください</div>
+    </div>
+
+    <!-- 4〜21: 個人クイズ 設問×8 + 正解×8（JS動的生成） -->
+    <div class="sld sbg" id="sl-q0" style="flex-direction:column;align-items:center;justify-content:center;padding:18px 24px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-a0" style="flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-q1" style="flex-direction:column;align-items:center;justify-content:center;padding:18px 24px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-a1" style="flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-q2" style="flex-direction:column;align-items:center;justify-content:center;padding:18px 24px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-a2" style="flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-q3" style="flex-direction:column;align-items:center;justify-content:center;padding:18px 24px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-a3" style="flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-q4" style="flex-direction:column;align-items:center;justify-content:center;padding:18px 24px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-a4" style="flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;"></div>
+
+    <!-- 20: 途中経過 -->
+    <div class="sld sbg" id="sl-interim" style="flex-direction:column;padding:18px 24px;">
+      <div style="text-align:center;margin-bottom:12px;">
+        <div class="sey">Ranking</div>
+        <div style="font-size:clamp(13px,2vw,20px);color:var(--white);font-weight:300;">途中経過</div>
+      </div>
+      <div id="sl-rank-rows" style="display:flex;flex-direction:column;gap:5px;flex:1;"></div>
+    </div>
+
+    <!-- 21: 席替え演出 -->
+    <div class="sld sbg" id="sl-shuf" style="flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;">
+      <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+      <div id="sl7-ready">
+        <div style="font-size:clamp(28px,5vw,56px);margin-bottom:16px;">🎲</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2.8vw,30px);color:var(--white);font-weight:300;margin-bottom:8px;">席替えタイム</div>
+        <div style="font-size:clamp(10px,1.2vw,13px);color:var(--text2);font-family:'Noto Sans JP',sans-serif;margin-bottom:28px;">ランダムで7卓に振り分けます</div>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <button onclick="slStartShuffle()" style="padding:10px 28px;background:var(--gold);color:var(--navy);border:none;border-radius:var(--r);font-size:clamp(11px,1.4vw,14px);cursor:pointer;font-family:'Noto Sans JP',sans-serif;font-weight:500;">🎲 シャッフル開始！</button>
+          <button onclick="slReShuffle()" style="padding:10px 22px;background:transparent;color:var(--gold);border:1px solid rgba(201,169,110,0.5);border-radius:var(--r);font-size:clamp(11px,1.4vw,14px);cursor:pointer;font-family:'Noto Sans JP',sans-serif;">🔀 再シャッフル</button>
+        </div>
+      </div>
+      <div id="sl7-countdown" style="display:none;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(60px,14vw,140px);color:var(--gold);line-height:1;" id="sl7-count-num">3</div>
+        <div style="font-size:clamp(12px,1.5vw,16px);color:var(--text2);font-family:'Noto Sans JP',sans-serif;margin-top:8px;">席替え中...</div>
+      </div>
+      <div id="sl7-spin" style="display:none;width:100%;padding:10px 20px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(13px,2vw,20px);color:var(--gold);margin-bottom:14px;">振り分け中...</div>
+        <div id="sl7-spin-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;width:100%;max-width:700px;margin:0 auto;"></div>
+      </div>
+      <div id="sl7-result" style="display:none;width:100%;padding:4px 10px;overflow:hidden;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(12px,1.8vw,20px);color:var(--gold);margin-bottom:12px;letter-spacing:2px;">🎊 席替え完了！</div>
+        <div id="sl7-result-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-width:700px;margin:0 auto;"></div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;">
+          <button onclick="slReShuffle()" style="padding:8px 20px;background:transparent;color:var(--gold);border:1px solid rgba(201,169,110,0.4);border-radius:var(--r);font-size:clamp(10px,1.2vw,13px);cursor:pointer;font-family:'Noto Sans JP',sans-serif;">🔀 再シャッフル</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 22〜27: グループ戦 設問×3 + 正解×3 -->
+    <div class="sld sbg" id="sl-gq0" style="flex-direction:column;align-items:center;justify-content:center;padding:18px 24px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-ga0" style="flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-gq1" style="flex-direction:column;align-items:center;justify-content:center;padding:18px 24px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-ga1" style="flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-gq2" style="flex-direction:column;align-items:center;justify-content:center;padding:18px 24px;text-align:center;"></div>
+    <div class="sld sbg" id="sl-ga2" style="flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;"></div>
+
+    <!-- 28: 代表戦① フラフープ -->
+    <div class="sld sbg" id="sl-battle1" style="flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;">
+      <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+      <div class="sey" style="margin-bottom:6px;">Battle Round 01</div>
+      <div class="sline"></div>
+      <div style="font-size:clamp(28px,5vw,52px);margin-bottom:12px;">🌀</div>
+      <div style="font-size:clamp(16px,2.8vw,30px);color:var(--white);font-weight:300;margin-bottom:10px;">女子代表対抗</div>
+      <div style="font-size:clamp(18px,3.2vw,34px);color:var(--gold);font-family:'Cormorant Garamond',serif;margin-bottom:16px;">フラフープ対決</div>
+      <div style="font-size:clamp(10px,1.3vw,13px);color:var(--text2);font-family:'Noto Sans JP',sans-serif;line-height:2.2;max-width:70%;">各卓の女性代表が選出！<br>一番長くフラフープを回せた代表者が勝利🏆<br><span style="color:var(--gold);">1位 +3pt &nbsp;／&nbsp; 2位 +2pt &nbsp;／&nbsp; 3位 +1pt</span></div>
+    </div>
+
+    <!-- 29: 代表戦② プロポーズ -->
+    <div class="sld sbg" id="sl-battle2" style="flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;">
+      <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+      <div class="sey" style="margin-bottom:6px;">Battle Round 02</div>
+      <div class="sline"></div>
+      <div style="font-size:clamp(28px,5vw,52px);margin-bottom:12px;">💍</div>
+      <div style="font-size:clamp(16px,2.8vw,30px);color:var(--white);font-weight:300;margin-bottom:10px;">男子代表対抗</div>
+      <div style="font-size:clamp(18px,3.2vw,34px);color:var(--gold);font-family:'Cormorant Garamond',serif;margin-bottom:16px;">かっこいいプロポーズ<br>一言選手権</div>
+      <div style="font-size:clamp(10px,1.3vw,13px);color:var(--text2);font-family:'Noto Sans JP',sans-serif;line-height:2.2;max-width:70%;">各卓の男性代表が選出！<br>新婦・美月さんへ一番かっこいいプロポーズを！<br><span style="color:var(--gold);">判定：新婦 美月さん 💕</span></div>
+    </div>
+
+    <!-- 30: 最終結果 -->
+    <div class="sld sbg" id="sl-final" style="flex-direction:column;padding:18px 24px;">
+      <div style="text-align:center;margin-bottom:12px;">
+        <div class="sey">Final Result</div>
+        <div style="font-size:clamp(13px,2vw,20px);color:var(--white);font-weight:300;">最終結果</div>
+      </div>
+      <div id="sl-final-rows" style="display:flex;flex-direction:column;gap:5px;flex:1;"></div>
+    </div>
+
+    <!-- 31: 景品当選者発表（1〜8位） -->
+    <div class="sld sbg" id="sl-winners-sl" style="flex-direction:column;padding:16px 24px;position:relative;">
+      <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+      <div style="text-align:center;margin-bottom:14px;">
+        <div class="sey">Prize Winner</div>
+        <div class="sline" style="margin:8px auto;"></div>
+        <div style="font-size:clamp(14px,2.2vw,24px);color:var(--gold);font-family:'Cormorant Garamond',serif;font-weight:300;">景品当選者発表！</div>
+      </div>
+      <div id="sl-winners" style="display:grid;grid-template-columns:1fr 1fr;gap:7px;flex:1;"></div>
+    </div>
+
+  </div>
+  <div class="snav" style="flex-wrap:wrap;gap:6px;">
+    <button class="btn btn-sm" onclick="prevSl()">← 前へ</button>
+    <span style="font-size:11px;color:var(--text2);" id="sl-no">1 / 26</span>
+    <button class="btn btn-sm" onclick="nextSl()">次へ →</button>
+    <div id="sl-ctrl" style="width:100%;display:flex;gap:6px;flex-wrap:wrap;padding-top:6px;border-top:0.5px solid rgba(201,169,110,0.15);margin-top:4px;"></div>
+  </div>
+</div>
+
+<!-- QR PRINT -->
+<div class="screen" id="sc-print">
+  <div class="card">
+    <div class="ctitle">席札QRカード（印刷用）</div>
+    <div class="steplbl">印刷してそのまま席札として使えるデザインです。A4に4×4で並びます。</div>
+    <button class="btn btn-s btn-sm" onclick="window.print()" style="margin-bottom:14px;">🖨 印刷する</button>
+    <div class="qr-print-grid" id="qr-print-grid"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+// QRアクセス判定（即時実行）
+(function(){if(new URLSearchParams(location.search).get('id'))document.body.classList.add('qr-mode');})();
+const SK='wq-v4';
+const TABLES=['A卓','B卓','C卓','D卓','E卓','F卓','G卓'];
+const GRP_PT=3;
+const BASE=location.href.split('?')[0];
+const TOTAL_SL=26;
+
+// 席替えルール定数
+const FIXED_PAIRS=[['秋山駿十','勝井陸斗'],['武井翔太','辻皓太'],['杉山智広','宮下敬伍'],['藤堂翔','樋元健将'],['三田果奈','久保祐飛']];
+const MOTO_A=['積優美香','伊藤優','分島萌']; // 元同期3人組（同卓・別卓に）
+const MOTO_B=['西河侑歩','吉田彩乃'];         // 元同期2人組（同卓・別卓に）
+const FIXED_5=['轟拓真','濵口リサ','谷萌佳','西谷貴都','針田寛太郎'];
+const SEPARATE=[['佐藤文哉','櫻井佑翔']];
+const HOSTS=['西原滉人','吉識健佑'];
+
+const INIT=[
+  {n:'秋山駿十',g:'地元(新郎)',s:'男性'},{n:'勝井陸斗',g:'地元(新郎)',s:'男性'},{n:'武井翔太',g:'地元(新郎)',s:'男性'},
+  {n:'渡部悠又',g:'地元＆少年野球_渡部',s:'男性'},{n:'辻皓太',g:'地元＆少年野球_辻',s:'男性'},{n:'渕野駿',g:'地元＆少年野球_渕野',s:'男性'},
+  {n:'川本勇大',g:'地元＆少年野球_川本',s:'男性'},{n:'原田翔平',g:'地元＆少年野球_原田',s:'男性'},{n:'中堂貴章',g:'地元＆少年野球_中堂',s:'男性'},
+  {n:'杉山智広',g:'高校(新郎)',s:'男性'},{n:'藤堂翔',g:'高校(新郎)',s:'男性'},{n:'宮下敬伍',g:'高校(新郎)',s:'男性'},{n:'樋元健将',g:'高校(新郎)',s:'男性'},
+  {n:'河野拓馬',g:'大学(新郎)',s:'男性'},{n:'轟拓真',g:'大学(新郎)',s:'男性'},{n:'濱名海人',g:'大学(新郎)',s:'男性'},
+  {n:'佐藤文哉',g:'大学(新郎)',s:'男性'},{n:'櫻井佑翔',g:'大学(新郎)',s:'男性'},{n:'野崎千弘',g:'大学(新郎)',s:'男性'},
+  {n:'西原滉人',g:'同期',s:'男性',host:true},{n:'吉識健佑',g:'同期',s:'男性',host:true},
+  {n:'久保祐飛',g:'同期',s:'男性'},{n:'三田果奈',g:'同期',s:'女性'},
+  {n:'田中薫',g:'地元(新婦)',s:'女性'},{n:'田中夏生',g:'地元(新婦)',s:'女性'},{n:'西垣晴子',g:'地元(新婦)',s:'女性'},
+  {n:'西浦朱音',g:'地元(新婦)',s:'女性'},{n:'正木優麻',g:'地元(新婦)',s:'女性'},{n:'関根愛加',g:'地元(新婦)',s:'女性'},
+  {n:'足立絵里',g:'地元(新婦)',s:'女性'},{n:'幸重葵',g:'地元(新婦)',s:'女性'},{n:'岡本日菜',g:'地元(新婦)',s:'女性'},
+  {n:'サカタフランシーニ梨瑚',g:'高校(新婦)',s:'女性'},{n:'薮田美優',g:'高校(新婦)',s:'女性'},{n:'信吉葉月',g:'高校(新婦)',s:'女性'},{n:'池田梨乃',g:'高校(新婦)',s:'女性'},
+  {n:'谷萌佳',g:'大学(新婦)',s:'女性'},{n:'西谷貴都',g:'大学(新郎)',s:'男性'},{n:'針田寛太郎',g:'大学(新郎)',s:'男性'},
+  {n:'足田陽菜',g:'大学(新婦)',s:'女性'},{n:'小林なの葉',g:'大学(新婦)',s:'女性'},{n:'濵口リサ',g:'大学(新婦)',s:'女性'},
+  {n:'積優美香',g:'元同期',s:'女性'},{n:'伊藤優',g:'元同期',s:'女性'},{n:'分島萌',g:'元同期',s:'女性'},
+  {n:'西河侑歩',g:'元同期',s:'女性'},{n:'吉田彩乃',g:'元同期',s:'女性'},
+];
+
+let S={
+  players:[],tableBonus:{},tableMembers:{},groupRound:1,groupCorrect:{},shuffled:false,
+  currentQ:-1,answerOpen:false,
+  questions:[
+    {q:'２人の付き合う前の初めてのデートは？',cs:['映画','カラオケ','京都','カフェ'],ans:0,comment:'初めてのデートは、阪急メンズ館の映画館でコードブルーを見ました。よしきは、コードブルーを見たことないのに、号泣。美月は、「ドラマ見てないのになくって、変な人、、、」'},
+    {q:'初めてのドライブデートでりんくうタウンに行きました。そこでよしきは高速道路を何キロで走行していたでしょうか？',cs:['60キロ','90キロ','110キロ','140キロ'],ans:0,comment:'右車線を60キロで走行し、渋滞のトップに立っていました。非常に緊張していたみたいです、、、'},
+    {q:'よしきからもらったプレゼントを美月さんは、何度、破損or紛失したでしょうか？',cs:['一度もない','１回','２回〜３回','４回〜５回'],ans:3,comment:'Tiffanyの指輪を２回、Chanelのリップ、eteのイヤリング、、、と紛失しています。美月さんはモノなくし・破損のプロです。'},
+    {q:'美月さんがよしきからバカにされて着なくなった古着は？',cs:['キャラクターのスウェット','タイトなレザーパンツ','カラフルなダウンジャケット','英字のTシャツ'],ans:2,comment:'美月さんは気に入ってたみたいですが、「いや、キムタクやん」と突っ込んでしまい、着方がわからなくなってしまいました。それ以降着用しているところは見ていません。。。'},
+    {q:'よしきが青山家に「娘さんをください」をしに行ったときの、お父様の開口一番は？',cs:['そんな堅苦しい挨拶いらんからね','ほんで、何しに来たんや？','娘をお願いします','お前に娘はやれん'],ans:1,comment:'「ほんで何しに来たんや」から始まり、お母さんと美月が泣き出す始末。重たい雰囲気で大立ち回りをし、無事結婚を許可してもらいました。'},
+  ],
+  prizes:['🥇 1位','🥈 2位','🥉 3位','4位','5位','6位','7位','8位','9位','10位'],
+  prizeNames:['Sowレストランペアチケット','Kodakコンパクトデジカメ','récolte 自動調理ポット','国産和牛カタログギフト','yumiko iihoshi ペアカップ','ゴリラの一掴み','久世福商店 詰め合わせ','NONFICTION ハンドクリーム','MARVIS ホワイトニング歯磨き粉','スタバカード'],
+};
+let qzSt={player:null,idx:0,ans:[],done:false};
+let curSl=0, slQIdx=0;
+
+// save: Supabase版は<head>内で定義済み
+// load: Supabase版をheadで定義済み
+function initPlayers(){
+  S.players=INIT.map((m,i)=>({id:'p'+i,name:m.n,group:m.g,sex:m.s,host:!!m.host,solo:null,groupTable:null}));
+}
+
+function go(m){
+  document.querySelectorAll('.nt').forEach((t,i)=>t.classList.toggle('on',['admin','quiz','group','ranking','slides','print'][i]===m));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById('sc-'+m).classList.add('on');
+  if(m==='ranking')renderRanking();
+  if(m==='group')renderGroup();
+  if(m==='admin'){renderAdmin();setTimeout(renderImgUpload,50);}
+  if(m==='quiz')renderQuizSel();
+  if(m==='slides')renderSlides();
+  if(m==='print')renderPrint();
+}
+
+
+// ===== 画像管理 =====
+const IMG_KEYS=['q1','q2','q3','q4','q5','gq1','gq2','gq3'];
+const IMG_LABELS=['Q1 映画館','Q2 高速道路','Q3 プレゼント','Q4 ダウン','Q5 挨拶','G1 空港','G2 キス警察','G3 ぴぴ'];
+const IMG_DATA={};
+
+function getImg(key){ return IMG_DATA[key]||null; }
+
+function renderImgUpload(){
+  const grid=document.getElementById('img-upload-grid');
+  if(!grid){console.warn('img-upload-grid not found');return;}
+  const rows=IMG_KEYS.map((key,i)=>{
+    const hasImg=!!IMG_DATA[key];
+    return '<div style="border:0.5px solid rgba(201,169,110,0.25);border-radius:8px;padding:8px;text-align:center;background:rgba(255,255,255,0.02);">'
+      +'<div style="font-size:11px;color:var(--gold);margin-bottom:6px;">'+IMG_LABELS[i]+'</div>'
+      +(hasImg
+        ?'<img src="'+IMG_DATA[key]+'" style="width:80px;height:60px;object-fit:cover;border-radius:4px;display:block;margin:0 auto 6px;" />'
+        :'<div style="width:80px;height:60px;background:rgba(255,255,255,0.04);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 6px;">🖼️</div>'
+      )
+      +'<button class="btn btn-sm btn-s" style="font-size:10px;padding:3px 8px;" onclick="triggerImgUpload(\''+key+'\','+i+')">'+(hasImg?'変更':'アップロード')+'</button>'
+      +(hasImg?'<button style="font-size:9px;color:var(--text3);background:none;border:none;cursor:pointer;display:block;margin:4px auto 0;" onclick="removeImg(\''+key+'\')"  >削除</button>':'')
+      +'</div>';
+  });
+  grid.innerHTML=rows.join('');
+}
+
+function triggerImgUpload(key,i){
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='image/png,image/jpeg,image/gif';
+  inp.onchange=function(){
+    const file=this.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=function(e){
+      IMG_DATA[key]=e.target.result;
+      renderImgUpload();
+      buildDynSlides();
+      toast(IMG_LABELS[i]+'をアップロードしました');
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+}
+
+function removeImg(key){
+  delete IMG_DATA[key];
+  renderImgUpload();
+  buildDynSlides();
+}
+
+// ADMIN
+function renderAdmin(){
+  const dn=S.players.filter(p=>p.solo!==null).length;
+  document.getElementById('a-tot').textContent=S.players.length;
+  document.getElementById('a-dn').textContent=dn;
+  document.getElementById('a-pd').textContent=S.players.length-dn;
+  document.getElementById('admin-list').innerHTML=S.players.map(p=>`
+    <div class="mr">
+      ${p.host?'<span class="badge" style="font-size:9px;">司会</span>':''} 
+      <span style="flex:1;font-size:13px;">${p.name}</span>
+      <span style="font-size:11px;color:var(--text3);margin-right:6px;">${p.group}</span>
+      <span class="pill ${p.sex==='男性'?'pm':'pf'}">${p.sex==='男性'?'♂':'♀'}</span>
+      <span class="pill ${p.solo!==null?'pok':'pw'}" style="margin-left:5px;">${p.solo!==null?p.solo+'pt':'未'}</span>
+      ${p.groupTable&&p.groupTable!=='司会'?`<span style="font-size:11px;color:var(--gold);margin-left:5px;">${p.groupTable}</span>`:''} 
+    </div>`).join('');
+  renderQCtrl();renderImgUpload();
+  if(S.shuffled)renderShufRes();
+}
+
+function renderQCtrl(){
+  const panel=document.getElementById('q-ctrl-panel');if(!panel)return;
+  panel.innerHTML=S.questions.map((q,i)=>{
+    const isOpen=S.currentQ===i;
+    const isDone=S.currentQ>i;
+    return`<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--r);border:0.5px solid ${isOpen?'rgba(201,169,110,0.5)':isDone?'rgba(59,109,17,0.3)':'rgba(255,255,255,0.06)'};background:${isOpen?'rgba(201,169,110,0.08)':isDone?'rgba(59,109,17,0.05)':'transparent'};">
+      <span style="font-size:12px;color:${isOpen?'var(--gold)':isDone?'#8cc851':'var(--text3)'};width:18px;">${isDone?'✓':isOpen?'▶':i+1}</span>
+      <span style="flex:1;font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Q${i+1}: ${q.q.slice(0,30)}${q.q.length>30?'…':''}</span>
+      <span style="font-size:10px;color:${isOpen?'var(--gold)':isDone?'#8cc851':'var(--text3)'};">${isDone?'終了':isOpen?'回答中':'待機'}</span>
+      ${!isDone&&!isOpen?`<button class="btn btn-sm btn-s" style="padding:3px 10px;font-size:11px;" onclick="openQ(${i})">解放</button>`:''}
+      ${isOpen?`<button class="btn btn-sm" style="padding:3px 10px;font-size:11px;" onclick="revealAns()">正解表示</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+async function openQ(i){
+  S.currentQ=i;S.answerOpen=false;
+  await save();renderQCtrl();toast(`Q${i+1}を解放しました`);
+}
+async function openAnswer(){
+  if(S.currentQ<0){toast('先に設問を解放してください');return;}
+  S.answerOpen=true;await save();renderQCtrl();toast('正解を表示しました');
+}
+async function revealAns(){
+  S.answerOpen=true;await save();renderQCtrl();toast('正解を表示しました');
+}
+async function lockAll(){
+  S.currentQ=-1;S.answerOpen=false;await save();renderQCtrl();toast('全問ロックしました');
+}
+
+
+async function resetScores(){
+  if(!confirm('全員の回答データをリセットしますか？\nポイント・席替えはそのままです。'))return;
+  S.players.forEach(p=>p.solo=null);
+  await save();renderAdmin();renderRanking();toast('回答データをリセットしました');
+}
+
+async function resetPoints(){
+  if(!confirm('グループポイント・ボーナスポイントをリセットしますか？\n個人回答はそのままです。'))return;
+  TABLES.forEach(t=>{S.tableBonus[t]=0;S.groupCorrect[t]=0;});
+  S.groupRound=1;
+  await save();renderAdmin();renderRanking();renderGroup();toast('ポイントをリセットしました');
+}
+
+async function resetGroupOnly(){
+  if(!confirm('グループ戦のポイント・正解数・問題数をリセットしますか？\n個人回答はそのままです。'))return;
+  TABLES.forEach(t=>{S.tableBonus[t]=0;S.groupCorrect[t]=0;});
+  S.groupRound=1;
+  await save();renderAdmin();renderRanking();renderGroup();toast('グループ戦データをリセットしました');
+}
+
+async function resetAll(){
+  if(!confirm('⚠️ 全データ（回答・ポイント・席替え）をリセットしますか？\nこの操作は取り消せません。'))return;
+  S.players=[];S.tableBonus={};S.tableMembers={};S.groupCorrect={};
+  S.shuffled=false;S.groupRound=1;
+  initPlayers();
+  TABLES.forEach(t=>{S.tableBonus[t]=0;S.tableMembers[t]=[];S.groupCorrect[t]=0;});
+  await save();renderAdmin();renderRanking();toast('全データをリセットしました');
+}
+
+// SHUFFLE with rules
+function doShuffle(){
+  if(!S.players.length){toast('参加者がいません');return;}
+  TABLES.forEach(t=>{S.tableBonus[t]=0;S.tableMembers[t]=[];});
+  S.players.forEach(p=>p.groupTable=null);
+  S.players.filter(p=>p.host).forEach(p=>p.groupTable='司会');
+
+  const NON_G=TABLES.filter(t=>t!=='G卓');
+  let best=null,bestScore=999,bestSeed=0;
+  const seedOffset=Math.floor(Math.random()*100000);
+  for(let seed=0;seed<2000;seed++){
+    const result=tryShuffle(seed+seedOffset);
+    if(!result)continue;
+    // 男性のみ卓を棄却
+    if(NON_G.some(t=>result[t].length>0&&result[t].every(p=>p.sex==='男性')))continue;
+    // 固定ペアが同卓かチェック
+    let pairOk=true;
+    for(const pair of FIXED_PAIRS){
+      let found=false;
+      for(const t of Object.keys(result)){
+        const ns=result[t].map(p=>p.name);
+        if(ns.includes(pair[0])&&ns.includes(pair[1])){found=true;break;}
+      }
+      if(!found){pairOk=false;break;}
+    }
+    if(!pairOk)continue;
+    const score=NON_G.reduce((acc,t)=>{
+      const m=result[t].filter(p=>p.sex==='男性').length;
+      const f=result[t].filter(p=>p.sex==='女性').length;
+      return acc+Math.abs(m-f);
+    },0);
+    if(score<bestScore){bestScore=score;best=result;bestSeed=seed;}
+    if(bestScore<=2)break;
+  }
+  if(!best){toast('席替えに失敗しました。再度お試しください');return;}
+
+  TABLES.forEach(t=>S.tableMembers[t]=[]);
+  for(const[t,mbs]of Object.entries(best)){
+    mbs.forEach(p=>{
+      const pl=S.players.find(x=>x.id===p.id);
+      if(pl){pl.groupTable=t;S.tableMembers[t].push(pl.id);}
+    });
+  }
+  S.shuffled=true;S.groupRound=1;
+  save();renderShufRes();renderGroup();
+  toast('席替え完了！✨');
+}
+
+function tryShuffle(seed){
+  // シード付き乱数
+  let s=seed+1;
+  function rnd(){s=(s*9301+49297)%233280;return s/233280;}
+  function shuf(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+  const NON_G=TABLES.filter(t=>t!=='G卓');
+  const tables=Object.fromEntries(TABLES.map(t=>[t,[]]));
+  const done=new Set();
+  const bn=n=>S.players.find(p=>p.name===n);
+  const mc=t=>tables[t].filter(p=>p.sex==='男性').length;
+  const fc=t=>tables[t].filter(p=>p.sex==='女性').length;
+  const gc=(t,g)=>tables[t].filter(p=>p.group===g).length;
+  const lim=t=>t==='G卓'?5:7;
+  const put=(p,t)=>{
+    if(p&&!done.has(p.id)&&tables[t].length<lim(t)){
+      tables[t].push(p);done.add(p.id);return true;
+    }return false;
+  };
+
+  // STEP1: G卓固定5人
+  FIXED_5.forEach(n=>put(bn(n),'G卓'));
+
+  // STEP2: 固定ペアを最優先で配置
+  for(const pair of FIXED_PAIRS){
+    const ps=pair.map(n=>bn(n)).filter(p=>p&&!done.has(p.id));
+    if(!ps.length)continue;
+    const avoid=new Set();
+    ps.forEach(p=>{if(SEPARATE.includes(p.name))SEPARATE.forEach(n=>{if(n!==p.name)avoid.add(n);});});
+    const cands=NON_G.filter(t=>{
+      if(tables[t].length+ps.length>lim(t))return false;
+      if([...avoid].some(n=>tables[t].find(m=>m.name===n)))return false;
+      return true;
+    }).map(t=>[-(fc(t)-mc(t)),tables[t].length,rnd(),t]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]||a[2]-b[2]);
+    const best=cands[0]?cands[0][3]:NON_G[0];
+    ps.forEach(p=>put(p,best));
+  }
+
+  // STEP2.5: 元同期を3人組+2人組で別卓に固定配置
+  const motoA=MOTO_A.map(n=>bn(n)).filter(p=>p&&!done.has(p.id));
+  const motoB=MOTO_B.map(n=>bn(n)).filter(p=>p&&!done.has(p.id));
+  // 3人組を配置（女性多い卓優先）
+  if(motoA.length){
+    const cA=NON_G.filter(t=>tables[t].length+motoA.length<=lim(t))
+      .sort((a,b)=>(fc(b)-mc(b))-(fc(a)-mc(a))||tables[a].length-tables[b].length);
+    const tA=cA[0]||NON_G[0];
+    motoA.forEach(p=>put(p,tA));
+  }
+  // 2人組を3人組と別の卓に配置
+  if(motoB.length){
+    const tA_used=NON_G.find(t=>tables[t].some(p=>MOTO_A.includes(p.name)))||null;
+    const cB=NON_G.filter(t=>t!==tA_used&&tables[t].length+motoB.length<=lim(t))
+      .sort((a,b)=>(fc(b)-mc(b))-(fc(a)-mc(a))||tables[a].length-tables[b].length);
+    const tB=cB[0]||NON_G[1];
+    motoB.forEach(p=>put(p,tB));
+  }
+
+  // STEP3: 残りをグループ別にペア化・余り1名を記録
+  const rem=shuf(S.players.filter(p=>!p.host&&!done.has(p.id)));
+  const grpMap={};
+  rem.forEach(p=>{if(!grpMap[p.group])grpMap[p.group]=[];grpMap[p.group].push(p);});
+
+  const pairs=[];
+  const singles=[];
+  for(const[g,mbs]of Object.entries(grpMap)){
+    const sh=shuf(mbs);
+    for(let i=0;i+1<sh.length;i+=2)pairs.push({ps:sh.slice(i,i+2),g});
+    if(sh.length%2===1)singles.push(sh[sh.length-1]);
+  }
+  shuf(pairs);
+
+  function findTable(ps,allowGrp3=false){
+    const avoid=new Set();
+    ps.forEach(p=>{if(SEPARATE.includes(p.name))SEPARATE.forEach(n=>{if(n!==p.name)avoid.add(n);});});
+    const maxGc=allowGrp3?3:2;
+    const cands=NON_G.filter(t=>{
+      if(tables[t].length+ps.length>lim(t))return false;
+      if([...avoid].some(n=>tables[t].find(m=>m.name===n)))return false;
+      if(gc(t,ps[0].group)+ps.length>maxGc)return false;
+      return true;
+    }).map(t=>{
+      const bal=ps.reduce((a,p)=>a+(p.sex==='男性'?fc(t)-mc(t):mc(t)-fc(t)),0);
+      return[-bal,tables[t].length,rnd(),t];
+    }).sort((a,b)=>a[0]-b[0]||a[1]-b[1]||a[2]-b[2]);
+    if(cands[0])return cands[0][3];
+    // 制約緩めて再検索
+    const fallback=NON_G.filter(t=>tables[t].length+ps.length<=lim(t)&&![...avoid].some(n=>tables[t].find(m=>m.name===n)));
+    return fallback.sort((a,b)=>tables[a].length-tables[b].length)[0]||null;
+  }
+
+  // ペアを配置
+  for(const{ps}of pairs){
+    const t=findTable(ps);
+    if(t)ps.forEach(p=>put(p,t));
+  }
+
+  // 余り1名：同グループがいる卓に追加（3名まで許容）
+  for(const p of singles){
+    const avoid=new Set();
+    if(SEPARATE.includes(p.name))SEPARATE.forEach(n=>{if(n!==p.name)avoid.add(n);});
+    // 同グループいる卓を優先
+    const withSameGrp=NON_G.filter(t=>{
+      if(tables[t].length>=lim(t))return false;
+      if([...avoid].some(n=>tables[t].find(m=>m.name===n)))return false;
+      return gc(t,p.group)>=1&&gc(t,p.group)<3;
+    }).sort((a,b)=>{
+      const bal=p.sex==='男性'?fc(a)-mc(a):mc(a)-fc(a);
+      const balb=p.sex==='男性'?fc(b)-mc(b):mc(b)-fc(b);
+      return balb-bal;
+    });
+    const t=withSameGrp[0]||findTable([p],true);
+    if(t)put(p,t);
+  }
+
+  // バリデーション
+  for(const t of NON_G){if(tables[t].length<6||tables[t].length>7)return null;}
+  // 元同期3人組が同卓かチェック
+  for(const t of NON_G){
+    const mInT=MOTO_A.filter(n=>tables[t].find(p=>p.name===n));
+    if(mInT.length>0&&mInT.length<MOTO_A.length)return null;
+  }
+  // 元同期2人組が同卓かチェック
+  for(const t of NON_G){
+    const mInT=MOTO_B.filter(n=>tables[t].find(p=>p.name===n));
+    if(mInT.length>0&&mInT.length<MOTO_B.length)return null;
+  }
+  // 元同期3人組と2人組が別卓かチェック
+  for(const t of NON_G){
+    const hasA=MOTO_A.some(n=>tables[t].find(p=>p.name===n));
+    const hasB=MOTO_B.some(n=>tables[t].find(p=>p.name===n));
+    if(hasA&&hasB)return null;
+  }
+  return tables;
+}
+
+function renderShufRes(){
+  const el=document.getElementById('shuf-res');
+  if(!el)return;
+  const layout=[
+    ['A卓','B卓'],
+    ['C卓','D卓','E卓'],
+    ['F卓','G卓']
+  ];
+  function tCard(t){
+    const mbs=(S.tableMembers[t]||[]).map(id=>S.players.find(p=>p.id===id)).filter(Boolean);
+    const mc=mbs.filter(p=>p.sex==='男性').length;
+    const fc=mbs.filter(p=>p.sex==='女性').length;
+    return`<div style="border:0.5px solid rgba(201,169,110,0.2);border-radius:6px;padding:8px;margin-bottom:6px;">
+      <div style="font-weight:500;color:var(--gold);margin-bottom:3px;">${t} <span style="font-size:11px;color:var(--text3);">♂${mc}♀${fc}</span></div>
+      <div style="font-size:12px;color:var(--text2);">${mbs.map(p=>p.name).join('　')}</div>
+    </div>`;
+  }
+  el.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;">
+    ${layout.map(col=>`<div>${col.map(t=>tCard(t)).join('')}</div>`).join('')}
+  </div>`;
+}
+async function qzNext(){
+  qzSt.idx++;
+  if(qzSt.idx<S.questions.length){showQ();return;}
+  const correct=qzSt.ans.reduce((a,b)=>a+b,0);
+  const bonus=correct===S.questions.length?3:0;
+  const score=correct+bonus;
+  qzSt.player.solo=score;
+  await save();
+  document.getElementById('qz-main').style.display='none';
+  document.getElementById('qz-done').style.display='block';
+  document.getElementById('qz-dn-nm').textContent=qzSt.player.name+'さん、ありがとうございました！';
+  document.getElementById('qz-dn-sc').textContent=score;
+  document.getElementById('qz-dn-of').textContent='/ '+S.questions.length+'問正解'+(bonus>0?' 🎉 全問正解ボーナス +3pt！':'');
+}
+
+// GROUP
+function renderGroup(){
+  document.getElementById('grp-rnd').textContent=S.groupRound;
+  const warn=document.getElementById('grp-warn');
+  if(!S.shuffled){warn.style.display='block';document.getElementById('grp-grid').innerHTML='';return;}
+  warn.style.display='none';
+  // 取り消し用セレクト更新
+const cancelSel=document.getElementById('cancel-tbl');
+if(cancelSel){cancelSel.innerHTML='<option value="">卓を選択</option>'+TABLES.map(t=>'<option value="'+t+'">'+t+'</option>').join('');}
+document.getElementById('grp-grid').innerHTML=TABLES.map(t=>{
+    const mbs=S.tableMembers[t]?.map(id=>S.players.find(p=>p.id===id)).filter(Boolean)||[];
+    return`<div class="tc"><div class="tn">${t}</div><div class="tp">${S.tableBonus[t]||0}pt</div>
+    <div class="tm">${mbs.length}名</div><button class="wb" onclick="giveWin('${t}')">正解 +${GRP_PT}pt</button></div>`;
+  }).join('');
+  document.getElementById('btl-grid').innerHTML=TABLES.map(t=>
+    `<div class="tc"><div class="tn">${t}</div><div class="tp" id="bpt-${t}">${S.tableBonus[t]||0}pt</div></div>`).join('');
+  const sel=document.getElementById('btl-tbl');
+  sel.innerHTML=TABLES.map(t=>`<option value="${t}">${t}</option>`).join('');
+}
+async function backRound(){
+  if(S.groupRound<=1){toast('第1問です。これ以上戻れません。');return;}
+  if(!confirm('前の問題に戻りますか？（ポイントは変わりません）'))return;
+  S.groupRound--;
+  await save();renderGroup();
+  toast(`第${S.groupRound}問に戻りました`);
+}
+
+async function cancelWin(){
+  const t=document.getElementById('cancel-tbl').value;
+  if(!t){toast('卓を選択してください');return;}
+  if(!confirm(`${t}の直前のポイント付与を取り消しますか？`))return;
+  if((S.tableBonus[t]||0)<GRP_PT){toast('取り消せるポイントがありません');return;}
+  S.tableBonus[t]=(S.tableBonus[t]||0)-GRP_PT;
+  S.groupCorrect[t]=Math.max(0,(S.groupCorrect[t]||1)-1);
+  await save();renderGroup();renderRanking();
+  toast(`${t} のポイントを取り消しました (-${GRP_PT}pt)`);
+}
+
+async function giveWin(t){
+  S.tableBonus[t]=(S.tableBonus[t]||0)+GRP_PT;
+  S.groupCorrect[t]=(S.groupCorrect[t]||0)+1;
+  let msg=`${t} 正解！ +${GRP_PT}pt`;
+  if(S.groupCorrect[t]===3){
+    S.tableBonus[t]=(S.tableBonus[t]||0)+GRP_PT;
+    msg+=` 🎉 全問正解ボーナス +${GRP_PT}pt！`;
+  }
+  await save();renderGroup();renderRanking();toast(msg);
+}
+async function giveBattle(){
+  const t=document.getElementById('btl-tbl').value;
+  const pt=parseInt(document.getElementById('btl-pt').value)||3;
+  if(!t){toast('卓を選択してください');return;}
+  S.tableBonus[t]=(S.tableBonus[t]||0)+pt;
+  await save();renderGroup();renderRanking();toast(`${t} バトル勝利！ +${pt}pt`);
+}
+
+async function cancelBattle(){
+  const t=document.getElementById('btl-tbl').value;
+  const pt=parseInt(document.getElementById('btl-pt').value)||3;
+  if(!t){toast('卓を選択してください');return;}
+  if(!confirm(`${t}のバトルポイント -${pt}pt を取り消しますか？`))return;
+  if((S.tableBonus[t]||0)<pt){toast('取り消せるポイントがありません');return;}
+  S.tableBonus[t]=(S.tableBonus[t]||0)-pt;
+  await save();renderGroup();renderRanking();toast(`${t} バトルポイントを取り消しました (-${pt}pt)`);
+}
+async function advRound(){if(S.groupRound>=3){toast('グループクイズは3問で終了です！');return;}S.groupRound++;await save();renderGroup();const el=document.getElementById('sl-grnd');if(el)el.textContent=S.groupRound;toast(`第${S.groupRound}問スタート！`);}
+
+// RANKING
+function calcTot(p){return(p.solo||0)+(p.groupTable&&p.groupTable!=='司会'?S.tableBonus[p.groupTable]||0:0);}
+function sorted(){return S.players.filter(p=>p.solo!==null).sort((a,b)=>calcTot(b)-calcTot(a));}
+async function refreshRanking(){
+  try{
+    const {data,error}=await supa.from('quiz_state').select('data').eq('id','main').single();
+    if(data&&data.data&&data.data.players){
+      // 参加者のsoloスコアを最新に更新
+      data.data.players.forEach(np=>{
+        const p=S.players.find(x=>x.id===np.id);
+        if(p&&np.solo!==null)p.solo=np.solo;
+      });
+      // tableBonus・groupCorrectも更新
+      if(data.data.tableBonus)S.tableBonus={...S.tableBonus,...data.data.tableBonus};
+      if(data.data.groupCorrect)S.groupCorrect={...S.groupCorrect,...data.data.groupCorrect};
+    }
+  }catch(e){console.error('refresh error',e);}
+  renderRanking();
+  toast('ランキングを更新しました');
+}
+function renderRanking(){
+  const sr=sorted();const mx=sr.length?calcTot(sr[0]):1;
+  const med=['🥇','🥈','🥉'];const rc=['r1','r2','r3'];
+  document.getElementById('r-tot').textContent=S.players.length;
+  document.getElementById('r-dn').textContent=S.players.filter(p=>p.solo!==null).length;
+  document.getElementById('r-grp').textContent=S.groupRound-1;
+  document.getElementById('rank-list').innerHTML=sr.slice(0,10).map((p,i)=>{
+    const tot=calcTot(p);const pct=mx>0?Math.round(tot/mx*100):0;
+    return`<div class="ri ${rc[i]||''}">
+      <div style="width:26px;text-align:center;font-size:15px;">${i<3?med[i]:i+1}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <span style="font-size:14px;color:var(--text);">${p.name}</span>
+          ${p.groupTable&&p.groupTable!=='司会'?`<span style="font-size:11px;color:var(--text3);">${p.groupTable}</span>`:''}
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+          <div class="pb"><div class="pf" style="width:${pct}%"></div></div>
+          <span style="font-size:11px;color:var(--text3);">個人${p.solo||0}+G${p.groupTable&&p.groupTable!=='司会'?S.tableBonus[p.groupTable]||0:0}</span>
+        </div>
+      </div>
+      <div style="font-size:17px;color:var(--gold);font-family:'Cormorant Garamond',serif;">${tot}pt</div>
+    </div>`;
+  }).join('')||'<div style="text-align:center;color:var(--text2);padding:3rem;font-size:14px;">まだ回答者がいません</div>';
+}
+
+// SLIDES
+const SL_LABELS=['表紙','ルール','景品','個人案内','Q1設問','Q1正解','Q2設問','Q2正解','Q3設問','Q3正解','Q4設問','Q4正解','Q5設問','Q5正解','途中経過','席替え','G1設問','G1正解','G2設問','G2正解','G3設問','G3正解','代表戦①','代表戦②','最終結果','景品当選者'];
+function qSlot(i){return 4+i*2;}   // Q1設問=4, Q1正解=5, ...
+function aSlot(i){return 5+i*2;}
+function gqSlot(i){return 22+i*2;} // G1設問=22, G1正解=23
+function gaSlot(i){return 23+i*2;}
+// fixed: interim=20, shuf=21, battle1=28, battle2=29, final=30, winners=31
+
+
+function updateSlCtrl(n){
+  const el=document.getElementById('sl-ctrl');
+  if(!el)return;
+  el.innerHTML='';
+  // Q設問スライド（4,6,8,10,12）→ 解放ボタン
+  if(n>=4&&n<14&&(n-4)%2===0){
+    const qi=(n-4)/2;
+    const isOpen=S.currentQ===qi;
+    const isDone=S.currentQ>qi;
+    if(!isDone&&!isOpen){
+      el.innerHTML+=`<button class="btn btn-sm btn-s" onclick="openQ(${qi});updateSlCtrl(${n})">🔓 Q${qi+1}を解放（回答受付開始）</button>`;
+    } else if(isOpen){
+      el.innerHTML+=`<span style="font-size:12px;color:var(--gold);padding:4px 10px;">✅ Q${qi+1} 回答中</span>`;
+    } else {
+      el.innerHTML+=`<span style="font-size:12px;color:#8cc851;padding:4px 10px;">✓ Q${qi+1} 終了</span>`;
+    }
+  }
+  // Q正解スライド（5,7,9,11,13）→ 正解表示ボタン
+  if(n>=5&&n<14&&(n-4)%2===1){
+    const qi=(n-4-1)/2;
+    if(!S.answerOpen){
+      el.innerHTML+=`<button class="btn btn-sm btn-s" onclick="revealAns();updateSlCtrl(${n})">🎯 正解を表示（参加者画面に反映）</button>`;
+    } else {
+      el.innerHTML+=`<span style="font-size:12px;color:#8cc851;padding:4px 10px;">✓ 正解表示済み</span>`;
+      el.innerHTML+=`<button class="btn btn-sm" onclick="openQ(${qi+1});updateSlCtrl(${n+1});nextSl()">▶ 次の問題へ進む</button>`;
+    }
+  }
+  // 途中経過スライド
+  if(n===14){
+    el.innerHTML+=`<button class="btn btn-sm btn-s" onclick="lockAll();updateSlCtrl(${n})">🔒 個人クイズ終了・全問ロック</button>`;
+  }
+}
+function renderSlides(){
+  buildDynSlides();
+  document.getElementById('spills').innerHTML=SL_LABELS.map((l,i)=>
+    `<button class="spill ${i===curSl?'on':''}" onclick="showSl(${i})">${l}</button>`).join('');
+  showSl(curSl);
+}
+
+
+function buildDynSlides(){
+  // 個人クイズ 設問・正解
+  S.questions.forEach((q,i)=>{
+    const qEl=document.getElementById('sl-q'+i);
+    if(qEl)qEl.innerHTML=buildQSlide(q,i);
+    const aEl=document.getElementById('sl-a'+i);
+    if(aEl)aEl.innerHTML=buildASlide(q,i);
+  });
+  // グループ戦 設問・正解
+  const gqs=[
+    {q:'２人の卒業旅行（空港）で起きた珍事件は？',cs:['危険物を持ち込みアナウンスされた','ご飯を食べていたら乗り遅れた','グランドスタッフに追いかけられた','ターミナルを間違えて乗り遅れそうになった'],ans:2,comment:'美月が重量測量で計測オーバーしてしまい、よしきが「いけるいける、いってまお！」と言ってごまかして突破したところ、グランドスタッフにばれて執念深く追いかけられた。最終的につかまりました。'},
+    {q:'２人史上、最も恥ずかしかった出来事は？',cs:['路肩に停車し、熱いキスをしたこと','美月がスタバでドリンクをカウンターにぶちまけたこと','ショッピングモールをラブラブ歩いていたら知り合いに見られたこと','よしきが岡山旅行でウィンドサーフィンを強制させられ海で引きずり回されたこと'],ans:0,comment:'京田辺の夜道でいたたまれず、キスをしていたら警察官に窓をノックされました。「公共の場なので気をつけて。横断歩道の上だからね（笑）」と注意されました。ちなみに選択肢は全て実話！'},
+    {q:'２人が呼び合っている呼び名のうち、使っていないものを１つ選んでください',cs:['みち','よぴ','ぴぴ','よっくん'],ans:3,comment:'みづき→みーちゃん→みち→みーち　よしき→よしきょす→よぴきょす→よぴ→ぴぴ　「よっくん」は使っていません！'},
+  ];
+  gqs.forEach((q,i)=>{
+    const qEl=document.getElementById('sl-gq'+i);
+    if(qEl)qEl.innerHTML=buildQSlide(q,i,'Group');
+    const aEl=document.getElementById('sl-ga'+i);
+    if(aEl)aEl.innerHTML=buildASlide(q,i,'Group Answer');
+  });
+}
+
+function choicesHTML(q){
+  return q.cs.map((c,i)=>
+    `<div style="border:0.5px solid rgba(201,169,110,0.18);border-radius:6px;padding:7px 12px;color:var(--text2);font-size:clamp(9px,1.3vw,13px);font-family:'Noto Sans JP',sans-serif;text-align:left;display:flex;align-items:center;gap:7px;">
+      <span style="width:18px;height:18px;border-radius:50%;background:rgba(201,169,110,0.1);color:var(--gold);font-size:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${'ABCD'[i]}</span>${c}</div>`).join('');
+}
+
+function buildQSlide(q,i,prefix='Question'){
+  return`
+  <div style="font-size:clamp(9px,1vw,11px);letter-spacing:4px;color:var(--gold);font-family:'Noto Sans JP',sans-serif;font-weight:300;margin-bottom:6px;">${prefix} ${String(i+1).padStart(2,'0')}</div>
+  <div style="width:36px;height:1px;background:var(--gold);margin:6px auto 10px;opacity:.55;"></div>
+  <div style="font-size:clamp(12px,2vw,20px);color:var(--white);font-weight:300;line-height:1.5;max-width:82%;margin:0 auto 14px;">${q.q}</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;width:100%;max-width:520px;">${choicesHTML(q)}</div>`;
+}
+
+function buildASlide(q,i,prefix='Answer'){
+  const isGroup=prefix==='Group Answer';
+  const imgKey=(isGroup?'gq':'q')+(i+1);
+  const imgSrc=getImg(imgKey);
+  const imgHtml=imgSrc?`<img src="${imgSrc}" style="max-height:clamp(120px,20vw,200px);border-radius:10px;margin-bottom:12px;object-fit:contain;" />`:'';
+  return`${imgHtml}<div style="font-size:clamp(9px,1vw,11px);letter-spacing:4px;color:var(--gold);font-family:'Noto Sans JP',sans-serif;font-weight:300;margin-bottom:10px;">${prefix} ${String(i+1).padStart(2,'0')}</div>
+  <div style="width:36px;height:1px;background:var(--gold);margin:8px auto 14px;opacity:.55;"></div>
+  <div style="background:rgba(201,169,110,0.12);border:1px solid rgba(201,169,110,0.25);border-radius:10px;padding:14px 32px;margin-bottom:16px;">
+    <div style="font-size:clamp(15px,2.8vw,28px);color:var(--gold);font-weight:300;">${'ABCD'[q.ans]}. ${q.cs[q.ans]}</div>
+  </div>
+  <div style="font-size:clamp(11px,1.5vw,16px);color:var(--text2);font-family:'Noto Sans JP',sans-serif;max-width:80%;line-height:1.9;overflow-wrap:break-word;">${q.comment||''}</div>`;
+}
+
+// slId→数値のマッピング
+function slIdFromN(n){
+  if(n<4)return'sl-'+n;
+  if(n<14){const qi=Math.floor((n-4)/2);const isA=(n-4)%2===1;return(isA?'sl-a':'sl-q')+qi;}
+  if(n===14)return'sl-interim';
+  if(n===15)return'sl-shuf';
+  if(n===16)return'sl-gq0';if(n===17)return'sl-ga0';
+  if(n===18)return'sl-gq1';if(n===19)return'sl-ga1';
+  if(n===20)return'sl-gq2';if(n===21)return'sl-ga2';
+  if(n===22)return'sl-battle1';
+  if(n===23)return'sl-battle2';
+  if(n===24)return'sl-final';
+  if(n===25)return'sl-winners-sl';
+  return null;
+}
+function showSl(n){
+  curSl=n;
+  document.querySelectorAll('.sld').forEach(s=>s.classList.remove('on'));
+  const id=slIdFromN(n);
+  if(id)document.getElementById(id)?.classList.add('on');
+  document.querySelectorAll('.spill').forEach((p,i)=>p.classList.toggle('on',i===n));
+  document.getElementById('sl-no').textContent=`${n+1} / ${TOTAL_SL}`;
+  if(n===14){refreshRanking().then(()=>updateSlRank());}
+  if(n===24){refreshRanking().then(()=>updateSlFinal());}
+  if(n===25){refreshRanking().then(()=>updateSlWinners());}
+  if(n===2)updateSlPrizes();
+  if(n===15)animShuf();
+  updateSlCtrl(n);
+}
+function prevSl(){if(curSl>0)showSl(curSl-1);}
+function nextSl(){if(curSl<TOTAL_SL-1)showSl(curSl+1);}
+
+function rankRows(n){
+  const sr=sorted().slice(0,n);const med=['🥇','🥈','🥉'];
+  return sr.map((p,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:5px;background:${i<3?'rgba(201,169,110,0.07)':'rgba(255,255,255,0.02)'};border:0.5px solid ${i<3?'rgba(201,169,110,0.2)':'rgba(255,255,255,0.05)'};">
+      <div style="font-size:clamp(12px,1.8vw,17px);color:var(--gold);width:26px;text-align:center;">${i<3?med[i]:i+1}</div>
+      <div style="flex:1;font-size:clamp(10px,1.5vw,14px);color:var(--white);font-family:'Noto Sans JP',sans-serif;">${p.name}</div>
+      ${p.groupTable&&p.groupTable!=='司会'?`<div style="font-size:clamp(9px,1vw,11px);color:var(--text3);font-family:'Noto Sans JP',sans-serif;">${p.groupTable}</div>`:''}
+      <div style="font-size:clamp(12px,1.6vw,15px);color:var(--gold);font-family:'Cormorant Garamond',serif;">${calcTot(p)}pt</div>
+    </div>`).join('')||'<div style="text-align:center;color:var(--text2);font-size:13px;padding:1rem;font-family:\'Noto Sans JP\',sans-serif;">まだ回答者がいません</div>';
+}
+function updateSlRank(){
+  document.getElementById('sl-rank-rows').innerHTML=rankRows(5);
+}
+function updateSlFinal(){
+  document.getElementById('sl-final-rows').innerHTML=rankRows(8);
+}
+function updateSlGroup(){
+  document.getElementById('sl-grnd').textContent=S.groupRound;
+  document.getElementById('sl-tgrid').innerHTML=TABLES.map(t=>{
+    const mbs=S.tableMembers[t]?.map(id=>S.players.find(p=>p.id===id)).filter(Boolean)||[];
+    const maxP=Math.max(...TABLES.map(x=>S.tableBonus[x]||0),1);
+    const lead=(S.tableBonus[t]||0)===maxP&&maxP>0;
+    return`<div style="background:${lead?'rgba(201,169,110,0.1)':'rgba(255,255,255,0.02)'};border:0.5px solid ${lead?'rgba(201,169,110,0.4)':'rgba(255,255,255,0.06)'};border-radius:6px;padding:8px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+      <div style="font-size:clamp(9px,1.2vw,12px);color:var(--text2);font-family:'Noto Sans JP',sans-serif;letter-spacing:1px;margin-bottom:4px;">${t}</div>
+      <div style="font-size:clamp(16px,2.5vw,24px);color:var(--gold);font-family:'Cormorant Garamond',serif;">${S.tableBonus[t]||0}pt</div>
+      <div style="font-size:clamp(8px,1vw,10px);color:var(--text3);font-family:'Noto Sans JP',sans-serif;margin-top:2px;">${mbs.length}名</div>
+    </div>`;
+  }).join('');
+}
+function updateSlPrizes(){
+  const medals=['🥇','🥈','🥉','4位','5位','6位','7位','8位','9位','10位'];
+  const bgs=['rgba(201,169,110,0.2)','rgba(180,180,180,0.12)','rgba(180,120,60,0.12)',
+    'rgba(255,255,255,0.04)','rgba(255,255,255,0.04)','rgba(255,255,255,0.04)',
+    'rgba(255,255,255,0.04)','rgba(255,255,255,0.04)','rgba(255,255,255,0.03)','rgba(255,255,255,0.03)'];
+  const el=document.getElementById('sl-prizes');
+  if(!el)return;
+  el.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:4px;width:100%;';
+  el.innerHTML=S.prizes.map((lbl,i)=>{
+    const name=S.prizeNames[i]||'未設定';
+    return `<div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;background:${bgs[i]};border:0.5px solid rgba(201,169,110,0.15);">
+      <span style="font-size:clamp(12px,1.6vw,16px);flex-shrink:0;">${medals[i]}</span>
+      <div style="min-width:0;flex:1;">
+        <div style="font-size:clamp(9px,0.9vw,10px);color:var(--gold);font-family:'Noto Sans JP',sans-serif;line-height:1.2;">${lbl}</div>
+        <div style="font-size:clamp(10px,1.1vw,12px);color:var(--white);font-family:'Noto Sans JP',sans-serif;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${name}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function updateSlWinners(){
+  const sr=sorted().slice(0,8);
+  const med=['🥇','🥈','🥉','4位','5位','6位','7位','8位'];
+  document.getElementById('sl-winners').innerHTML=sr.map((p,i)=>{
+    const prize=S.prizeNames[i]||'';
+    const top3=i<3;
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:7px;background:${top3?'rgba(201,169,110,0.1)':'rgba(255,255,255,0.03)'};border:0.5px solid ${top3?'rgba(201,169,110,0.35)':'rgba(255,255,255,0.06)'};">
+      <div style="font-size:clamp(13px,2vw,20px);width:32px;text-align:center;">${med[i]}</div>
+      <div style="flex:1;">
+        <div style="font-size:clamp(11px,1.6vw,16px);color:var(--white);font-family:'Noto Sans JP',sans-serif;">${p.name}</div>
+        ${prize?`<div style="font-size:clamp(9px,1.1vw,12px);color:var(--gold);font-family:'Noto Sans JP',sans-serif;">${prize}</div>`:''}
+      </div>
+      <div style="font-size:clamp(11px,1.5vw,15px);color:var(--gold);font-family:'Cormorant Garamond',serif;">${calcTot(p)}pt</div>
+    </div>`;
+  }).join('')||'<div style="color:var(--text2);font-size:13px;font-family:\'Noto Sans JP\',sans-serif;padding:2rem;text-align:center;">まだ回答者がいません</div>';
+}
+
+let shufTimer=null;
+let slShufDone=false;
+
+function animShuf(){
+  // スライド7が表示されたとき：待機画面を表示
+  document.getElementById('sl7-ready').style.display='flex';
+  document.getElementById('sl7-countdown').style.display='none';
+  document.getElementById('sl7-spin').style.display='none';
+  document.getElementById('sl7-result').style.display='none';
+  // 既に席替え済みなら結果表示ボタンを表示
+  if(S.shuffled){
+    renderSl7Result();
+  }
+}
+
+function slStartShuffle(){
+  // まず席替え実行（データ計算）
+  doShuffle();
+  // 演出開始
+  document.getElementById('sl7-ready').style.display='none';
+  startCountdown();
+}
+
+function slReShuffle(){
+  doShuffle();
+  document.getElementById('sl7-ready').style.display='none';
+  document.getElementById('sl7-result').style.display='none';
+  startCountdown();
+}
+
+function startCountdown(){
+  document.getElementById('sl7-countdown').style.display='block';
+  document.getElementById('sl7-spin').style.display='none';
+  document.getElementById('sl7-result').style.display='none';
+  let cnt=3;
+  document.getElementById('sl7-count-num').textContent=cnt;
+  document.getElementById('sl7-count-num').style.color='var(--gold)';
+  const timer=setInterval(()=>{
+    cnt--;
+    if(cnt>0){
+      document.getElementById('sl7-count-num').textContent=cnt;
+      // 点滅エフェクト
+      document.getElementById('sl7-count-num').style.opacity='0';
+      setTimeout(()=>document.getElementById('sl7-count-num').style.opacity='1',100);
+    } else {
+      clearInterval(timer);
+      document.getElementById('sl7-count-num').textContent='🎲';
+      setTimeout(()=>startSpin(),400);
+    }
+  },700);
+}
+
+function startSpin(){
+  document.getElementById('sl7-countdown').style.display='none';
+  document.getElementById('sl7-spin').style.display='block';
+
+  const grid=document.getElementById('sl7-spin-grid');
+  grid.innerHTML=TABLES.map(t=>`
+    <div style="background:rgba(201,169,110,0.08);border:0.5px solid rgba(201,169,110,0.2);border-radius:6px;padding:8px 4px;text-align:center;">
+      <div style="font-size:clamp(9px,1.1vw,12px);color:var(--text2);font-family:'Noto Sans JP',sans-serif;letter-spacing:1px;margin-bottom:4px;">${t}</div>
+      <div class="spin-name" id="spin-${t}" style="font-size:clamp(9px,1.1vw,11px);color:var(--gold);font-family:'Noto Sans JP',sans-serif;min-height:14px;"></div>
+    </div>`).join('');
+
+  // 全参加者名をランダムに流す演出
+  const allNames=S.players.filter(p=>!p.host).map(p=>p.name);
+  let spinCount=0;
+  const maxSpin=40;
+
+  function spinStep(){
+    if(spinCount>=maxSpin){
+      // 最終結果を表示
+      setTimeout(()=>showFinalResult(),300);
+      return;
+    }
+    // ランダムな名前をパラパラ表示
+    TABLES.forEach(t=>{
+      const el=document.getElementById('spin-'+t);
+      if(el){
+        const randomName=allNames[Math.floor(Math.random()*allNames.length)];
+        el.textContent=randomName.length>5?randomName.slice(0,5)+'…':randomName;
+      }
+    });
+    spinCount++;
+    // だんだん遅くなる
+    const delay=spinCount<20?60:spinCount<32?100:150;
+    setTimeout(spinStep,delay);
+  }
+  spinStep();
+}
+
+function showFinalResult(){
+  // 実際の結果をスピン枠に表示（ドン！）
+  TABLES.forEach(t=>{
+    const el=document.getElementById('spin-'+t);
+    if(!el)return;
+    const mbs=(S.tableMembers[t]||[]).map(id=>S.players.find(p=>p.id===id)).filter(Boolean);
+    if(mbs.length){
+      el.textContent=mbs[0].name+(mbs.length>1?'…':'');
+      el.style.color='var(--white)';
+    }
+  });
+
+  // 少し待ってから詳細結果画面へ
+  setTimeout(()=>{
+    document.getElementById('sl7-spin').style.display='none';
+    document.getElementById('sl7-result').style.display='block';
+    renderSl7Result();
+  },1200);
+}
+
+function renderSl7Result(){
+  const grid=document.getElementById('sl7-result-grid');
+  if(!grid)return;
+  const layout=[['A卓','B卓'],['C卓','D卓','E卓'],['F卓','G卓']];
+  function tCard(t){
+    const mbs=(S.tableMembers[t]||[]).map(id=>S.players.find(p=>p.id===id)).filter(Boolean);
+    const mc=mbs.filter(p=>p.sex==='男性').length;
+    const fc=mbs.filter(p=>p.sex==='女性').length;
+    return`<div style="background:rgba(201,169,110,0.06);border:0.5px solid rgba(201,169,110,0.2);border-radius:5px;padding:4px 4px;text-align:center;margin-bottom:4px;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(10px,1.3vw,14px);color:var(--gold);margin-bottom:2px;">${t} <span style="font-size:8px;color:var(--text3);">♂${mc}♀${fc}</span></div>
+      <div style="font-size:clamp(7px,0.75vw,9px);color:var(--text2);line-height:1.45;">${mbs.map(p=>p.name).join('<br>')}</div>
+    </div>`;
+  }
+  grid.style.cssText='display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;';
+  grid.innerHTML=layout.map(col=>`<div style="display:flex;flex-direction:column;">${col.map(t=>tCard(t)).join('')}</div>`).join('');
+}
+
+function renderPrint(){
+  const g=document.getElementById('qr-print-grid');g.innerHTML='';
+  S.players.forEach(p=>{
+    const url=`${BASE}?id=${p.id}`;
+    const card=document.createElement('div');card.className='qr-card';
+    const inner=document.createElement('div');inner.className='qr-card-inner';
+    // タイトル
+    const title=document.createElement('div');title.className='qr-card-title';title.textContent='WEDDING QUIZ';inner.appendChild(title);
+    // デコライン
+    const deco1=document.createElement('div');deco1.className='qr-card-deco';inner.appendChild(deco1);
+    // QRコード
+    const qd=document.createElement('div');inner.appendChild(qd);
+    // デコライン
+    const deco2=document.createElement('div');deco2.className='qr-card-deco';inner.appendChild(deco2);
+    // 名前
+    const name=document.createElement('div');name.className='qr-card-name';name.textContent=p.name;inner.appendChild(name);
+
+    card.appendChild(inner);g.appendChild(card);
+    try{new QRCode(qd,{text:url,width:90,height:90,colorDark:'#1a1a2e',colorLight:'#ffffff'});}catch(e){}
+  });
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// URL param routing
+function route(){
+  const id=new URLSearchParams(location.search).get('id');
+  if(!id)return;
+  const pl=S.players.find(x=>x.id===id);
+  if(!pl)return;
+  document.body.classList.add('qr-mode');
+  const sc=document.getElementById('sc-quiz');
+  if(sc)sc.style.cssText='display:block!important;padding:16px;';
+  document.getElementById('qz-sel').style.display='none';
+  document.getElementById('qz-done').style.display='none';
+  document.getElementById('qz-main').style.display='none';
+  if(pl.solo!==null){
+    document.getElementById('qz-done').style.display='block';
+    document.getElementById('qz-dn-nm').textContent=pl.name+'さんは回答済みです！';
+    document.getElementById('qz-dn-sc').textContent=pl.solo;
+    document.getElementById('qz-dn-of').textContent='/ '+S.questions.length+'問正解';
+    return;
+  }
+  qzSt={player:pl,idx:0,ans:[],done:false};
+  document.getElementById('qz-nm').textContent=pl.name;
+  document.getElementById('qz-main').style.display='block';
+  showQ();
+}
+
+async function init(){
+  await load();
+  renderAdmin();renderRanking();
+  buildDynSlides();
+  document.getElementById('spills').innerHTML=SL_LABELS.map((l,i)=>
+    `<button class="spill ${i===0?'on':''}" onclick="showSl(${i})"><span style="white-space:nowrap;">${l}</span></button>`).join('');
+  showSl(0);
+  route();
+  // QRアクセスでない場合のみリアルタイム購読
+  if(!new URLSearchParams(location.search).get('id'))startRealtimeSync();
+}
+init();
+</script>
+
+</body>
+</html>
