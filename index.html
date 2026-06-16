@@ -964,7 +964,24 @@ function renderShufRes(){
 }
 async function qzNext(){
   qzSt.idx++;
-  if(qzSt.idx<S.questions.length){showQ();return;}
+  if(qzSt.idx<S.questions.length){
+  const q=S.questions[qzSt.idx];
+
+  document.getElementById('qz-ctr').textContent='問題 '+(qzSt.idx+1)+' / '+S.questions.length;
+  document.getElementById('qz-pg').style.width=((qzSt.idx+1)/S.questions.length*100)+'%';
+  document.getElementById('qz-ql').textContent='Question '+String(qzSt.idx+1).padStart(2,'0');
+  document.getElementById('qz-q').textContent=q.q;
+  document.getElementById('qz-res').style.display='none';
+  document.getElementById('qz-nx').style.display='none';
+  document.getElementById('qz-ch').innerHTML=q.cs.map((c,i)=>
+    `<button class="qchoice" onclick="answerQ(${i})">
+      <span class="qa">${'ABCD'[i]}</span>
+      <span>${c}</span>
+    </button>`
+  ).join('');
+
+  return;
+}
   const correct=qzSt.ans.reduce((a,b)=>a+b,0);
   const bonus=correct===S.questions.length?3:0;
   const score=correct+bonus;
