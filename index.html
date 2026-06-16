@@ -1437,7 +1437,41 @@ function toast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2200);
 }
+function answerQ(i){
+  const q=S.questions[qzSt.idx];
+  if(!q)return;
 
+  const ok=(i===q.ans);
+
+  qzSt.ans[qzSt.idx]=ok?1:0;
+
+  document.querySelectorAll('.qchoice').forEach((b,idx)=>{
+    b.disabled=true;
+
+    if(idx===q.ans){
+      b.style.borderColor='#8cc851';
+    }
+
+    if(idx===i && !ok){
+      b.style.borderColor='#e07070';
+    }
+  });
+
+  const res=document.getElementById('qz-res');
+
+  if(res){
+    res.style.display='block';
+    res.textContent=ok
+      ? '正解！'
+      : '不正解… 正解は「'+q.cs[q.ans]+'」';
+  }
+
+  const nx=document.getElementById('qz-nx');
+
+  if(nx){
+    nx.style.display='block';
+  }
+}
 // URL param routing
 function route(){
   const id=new URLSearchParams(location.search).get('id');
