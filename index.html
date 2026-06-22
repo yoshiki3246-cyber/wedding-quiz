@@ -1250,7 +1250,7 @@ function updateSlRank(){
   document.getElementById('sl-rank-rows').innerHTML=rankRows(5);
 }
 function updateSlFinal(){
-  document.getElementById('sl-final-rows').innerHTML=rankRows(8);
+　document.getElementById('sl-final-rows').innerHTML=rankRows(10);
 }
 function updateSlGroup(){
   document.getElementById('sl-grnd').textContent=S.groupRound;
@@ -1285,8 +1285,8 @@ function updateSlPrizes(){
   }).join('');
 }
 function updateSlWinners(){
-  const sr=sorted().slice(0,8);
-  const med=['🥇','🥈','🥉','4位','5位','6位','7位','8位'];
+  const sr=sorted().slice(0,10)
+  const med=['🥇','🥈','🥉','4位','5位','6位','7位','8位','9位','10位'];
   document.getElementById('sl-winners').innerHTML=sr.map((p,i)=>{
     const prize=S.prizeNames[i]||'';
     const top3=i<3;
